@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 categories.forEach((category) => {
                     const categoryButton = document.createElement("button");
                     categoryButton.classList.add(
-                        "bg-gray-100",
+                        "bg-pink-200",
                         "border",
                         "stroke-lime-50",
                         "w-16"
