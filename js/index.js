@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <p class="flex items-center">
                                         ${author.profile_name}
                                         ${
-                                            author.profile_name
+                                            author.verified
                                                 ? '<img src="./verified img.jpg" alt="Verified" class="w-4 h-4 ml-1" />'
                                                 : ""
                                         }
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="card-body">
                             <h2 class="card-title">${video.title}</h2>
                             <div class="authors">${authorsHtml}</div>
-                            <p>Views: ${video.others.views}</p>
+                            <p class="views">Views: ${video.others.views}</p>
                         </div>
                     `;
 
@@ -138,4 +138,39 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     fetchAndDisplayCategoryData();
+
+    // Add event listener to the "Sort by view" button
+    const sortByViewButton = document.getElementById("sort-by-view-button");
+
+    sortByViewButton.addEventListener("click", () => {
+        // Get the current videos displayed in the card container
+        const cards = Array.from(cardContainer.querySelectorAll(".card"));
+
+        // Sort the cards by views in descending order
+        cards.sort((a, b) => {
+            const viewsA = parseInt(
+                a
+                    .querySelector(".views")
+                    .textContent.split(":")[1]
+                    .trim()
+                    .replace("K", "000")
+            );
+            const viewsB = parseInt(
+                b
+                    .querySelector(".views")
+                    .textContent.split(":")[1]
+                    .trim()
+                    .replace("K", "000")
+            );
+            return viewsB - viewsA;
+        });
+
+        // Remove the existing cards from the container
+        cardContainer.innerHTML = "";
+
+        // Append the sorted cards back to the container
+        cards.forEach((card) => {
+            cardContainer.appendChild(card);
+        });
+    });
 });

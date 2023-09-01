@@ -14,6 +14,9 @@
         <div class="flex justify-center">
             <h1 class="text-3xl font-bold mt-5">Blog Questions</h1>
         </div>
+        <div>
+            <button class="btn btn-warning" onclick="goBack()">Back</button>
+        </div>
 
         <!-- Question 1 -->
         <section class="bg-blue-200 mt-5">
@@ -91,5 +94,10 @@
                 overall system's functionality.
             </h4>
         </section>
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
     </body>
 </html>
