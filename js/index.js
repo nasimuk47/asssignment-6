@@ -40,6 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     categoryContainer.appendChild(categoryButton);
                 });
+
+                // Load the "All" category by default
+                fetchAndDisplayVideoData("1000"); // Assuming "1000" is the category ID for "All"
             } else {
                 console.error(
                     "Failed to fetch categories:",
