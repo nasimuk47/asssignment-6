@@ -67,36 +67,58 @@ document.addEventListener("DOMContentLoaded", () => {
                 cardContainer.innerHTML = ""; // Clear existing cards
 
                 videos.forEach((video) => {
+                    const card = document.createElement("div");
+                    card.classList.add("card", "w-72", "bg-gray-100");
+
                     const authorsHtml = video.authors
                         .map(
                             (author) => `
                                 <div class="author">
-                                    <img src="${
-                                        author.profile_picture
-                                    } " class="w-10 h-10" " alt="${
+                                    <p class="flex items-center">
+                                        ${author.profile_name}
+                                        ${
+                                            author.profile_name
+                                                ? '<img src="./verified img.jpg" alt="Verified" class="w-4 h-4 ml-1" />'
+                                                : ""
+                                        }
+                                    </p>
+                                    <img src="${author.profile_picture}" alt="${
                                 author.profile_name
-                            }" />
-                                    <p>${author.profile_name}</p>
-                                    <p>Verified: ${
-                                        author.verified ? "Yes" : "No"
-                                    }</p>
+                            }" class="w-10 h-10 rounded-3xl " />
                                 </div>
                             `
                         )
                         .join("");
 
-                    const card = document.createElement("div");
-                    card.classList.add("card", "w-72", "bg-gray-100");
+                    const postedDate = new Date(
+                        video.others.posted_date * 1000
+                    ); // Multiply by 1000 to convert to milliseconds
+
+                    function formatTime(date) {
+                        const options = {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: true,
+                        };
+                        return date.toLocaleString("en-US", options);
+                    }
+
+                    const formattedTime = formatTime(postedDate);
 
                     card.innerHTML = `
-                        <figure>
-                            <img src="${video.thumbnail}" alt="${video.title}" />
-                        </figure>
+                        <div class="thumbnail-container relative">
+                            <figure>
+                                <img src="${video.thumbnail}" alt="${video.title}" />
+                            </figure>
+                            <p class="posted-time-badge absolute bottom-0 right-0 bg-gray-200 p-1 text-xs">
+                                ${formattedTime}
+                            </p>
+                        </div>
                         <div class="card-body">
                             <h2 class="card-title">${video.title}</h2>
                             <div class="authors">${authorsHtml}</div>
                             <p>Views: ${video.others.views}</p>
-                            <p>Posted Date: ${video.others.posted_date}</p>
                         </div>
                     `;
 
