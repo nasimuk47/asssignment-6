@@ -9,6 +9,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const cardContainer = document.getElementById("card-container");
     const categoryContainer = document.getElementById("category-container");
 
+    function formatTime(seconds) {
+        if (seconds < 60) {
+            return ""; // Hide the time if it's less than 1 minute
+        }
+
+        const hours = Math.floor(seconds / 3600); // 1 hour = 3600 seconds
+        const minutes = Math.floor((seconds % 3600) / 60); // 1 minute = 60 seconds
+
+        let formattedTime = "";
+
+        if (hours > 0) {
+            formattedTime += hours + "hrs";
+            if (minutes > 0) {
+                formattedTime += " ";
+            }
+        }
+
+        if (minutes > 0) {
+            formattedTime += minutes + "min";
+        }
+
+        formattedTime += " ago";
+
+        return formattedTime;
+    }
+
     const fetchAndDisplayCategoryData = async () => {
         const categoriesUrl =
             "https://openapi.programming-hero.com/api/videos/categories";
@@ -93,30 +119,21 @@ document.addEventListener("DOMContentLoaded", () => {
                         )
                         .join("");
 
-                    const postedDate = new Date(
-                        video.others.posted_date * 1000
-                    ); // Multiply by 1000 to convert to milliseconds
-
-                    function formatTime(date) {
-                        const options = {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hour12: true,
-                        };
-                        return date.toLocaleString("en-US", options);
-                    }
-
-                    const formattedTime = formatTime(postedDate);
+                    const postedTimeInSeconds = video.others.posted_date;
+                    const formattedTime = formatTime(postedTimeInSeconds);
 
                     card.innerHTML = `
                         <div class="thumbnail-container relative">
                             <figure>
-                                <img src="${video.thumbnail}" alt="${video.title}" />
+                                <img src="${video.thumbnail}" alt="${
+                        video.title
+                    }" />
                             </figure>
-                            <p class="posted-time-badge absolute bottom-0 right-0 bg-gray-200 p-1 text-xs">
-                                ${formattedTime}
-                            </p>
+                            ${
+                                formattedTime
+                                    ? `<p class="posted-time-badge absolute bottom-0 right-0 bg-gray-200 p-1 text-xs">${formattedTime}</p>`
+                                    : ""
+                            }
                         </div>
                         <div class="card-body">
                             <h2 class="card-title">${video.title}</h2>
