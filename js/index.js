@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatTime(seconds) {
         if (seconds < 60) {
-            return ""; // Hide the time if it's less than 1 minute
+            return "";
         }
 
-        const hours = Math.floor(seconds / 3600); // 1 hour = 3600 seconds
-        const minutes = Math.floor((seconds % 3600) / 60); // 1 minute = 60 seconds
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
 
         let formattedTime = "";
 
@@ -67,8 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     categoryContainer.appendChild(categoryButton);
                 });
 
-                // Load the "All" category by default
-                fetchAndDisplayVideoData("1000"); // Assuming "1000" is the category ID for "All"
+                fetchAndDisplayVideoData("1000");
             } else {
                 console.error(
                     "Failed to fetch categories:",
@@ -93,57 +92,77 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 const videos = responseData.data;
 
-                cardContainer.innerHTML = ""; // Clear existing cards
+                cardContainer.innerHTML = "";
 
-                videos.forEach((video) => {
-                    const card = document.createElement("div");
-                    card.classList.add("card", "w-72", "bg-gray-100");
-
-                    const authorsHtml = video.authors
-                        .map(
-                            (author) => `
-                                <div class="author">
-                                    <p class="flex items-center">
-                                        ${author.profile_name}
-                                        ${
-                                            author.verified
-                                                ? '<img src="./verified img.jpg" alt="Verified" class="w-4 h-4 ml-1" />'
-                                                : ""
-                                        }
-                                    </p>
-                                    <img src="${author.profile_picture}" alt="${
-                                author.profile_name
-                            }" class="w-10 h-10 rounded-3xl " />
-                                </div>
-                            `
-                        )
-                        .join("");
-
-                    const postedTimeInSeconds = video.others.posted_date;
-                    const formattedTime = formatTime(postedTimeInSeconds);
-
-                    card.innerHTML = `
-                        <div class="thumbnail-container relative">
-                            <figure>
-                                <img src="${video.thumbnail}" alt="${
-                        video.title
-                    }" />
-                            </figure>
-                            ${
-                                formattedTime
-                                    ? `<p class="posted-time-badge absolute bottom-0 right-0 bg-gray-200 p-1 text-xs">${formattedTime}</p>`
-                                    : ""
-                            }
-                        </div>
-                        <div class="card-body">
-                            <h2 class="card-title">${video.title}</h2>
-                            <div class="authors">${authorsHtml}</div>
-                            <p class="views">Views: ${video.others.views}</p>
-                        </div>
+                if (videos.length === 0) {
+                    const noDataMessage = document.createElement("div");
+                    noDataMessage.classList.add("no-data-message");
+                    noDataMessage.innerHTML = `
+                        <section class="flex justify-center items-center ">
+                            <div>
+                                <img src="./Icon.png" alt="" />
+                            </div>
+                            <div>
+                                <p>Oops!! Sorry, There is no content here</p>
+                            </div>
+                        </section>
                     `;
+                    cardContainer.appendChild(noDataMessage);
+                } else {
+                    videos.forEach((video) => {
+                        const card = document.createElement("div");
+                        card.classList.add("card", "w-72", "bg-gray-100");
 
-                    cardContainer.appendChild(card);
-                });
+                        const authorsHtml = video.authors
+                            .map(
+                                (author) => `
+                                    <div class="author">
+                                        <p class="flex items-center">
+                                            ${author.profile_name}
+                                            ${
+                                                author.verified
+                                                    ? '<img src="./verified img.jpg" alt="Verified" class="w-4 h-4 ml-1" />'
+                                                    : ""
+                                            }
+                                        </p>
+                                        <img src="${
+                                            author.profile_picture
+                                        }" alt="${
+                                    author.profile_name
+                                }" class="w-10 h-10 rounded-3xl " />
+                                    </div>
+                                `
+                            )
+                            .join("");
+
+                        const postedTimeInSeconds = video.others.posted_date;
+                        const formattedTime = formatTime(postedTimeInSeconds);
+
+                        card.innerHTML = `
+                            <div class="thumbnail-container relative">
+                                <figure>
+                                    <img src="${video.thumbnail}" alt="${
+                            video.title
+                        }" />
+                                </figure>
+                                ${
+                                    formattedTime
+                                        ? `<p class="posted-time-badge absolute bottom-0 right-0 bg-gray-200 p-1 text-xs">${formattedTime}</p>`
+                                        : ""
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h2 class="card-title">${video.title}</h2>
+                                <div class="authors">${authorsHtml}</div>
+                                <p class="views">Views: ${
+                                    video.others.views
+                                }</p>
+                            </div>
+                        `;
+
+                        cardContainer.appendChild(card);
+                    });
+                }
             } else {
                 console.error(
                     `Failed to fetch data for category ${categoryId}`
@@ -156,14 +175,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchAndDisplayCategoryData();
 
-    // Add event listener to the "Sort by view" button
     const sortByViewButton = document.getElementById("sort-by-view-button");
 
     sortByViewButton.addEventListener("click", () => {
-        // Get the current videos displayed in the card container
         const cards = Array.from(cardContainer.querySelectorAll(".card"));
 
-        // Sort the cards by views in descending order
         cards.sort((a, b) => {
             const viewsA = parseInt(
                 a
@@ -182,10 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return viewsB - viewsA;
         });
 
-        // Remove the existing cards from the container
         cardContainer.innerHTML = "";
 
-        // Append the sorted cards back to the container
         cards.forEach((card) => {
             cardContainer.appendChild(card);
         });
