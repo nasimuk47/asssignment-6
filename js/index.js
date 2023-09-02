@@ -98,14 +98,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     const noDataMessage = document.createElement("div");
                     noDataMessage.classList.add("no-data-message");
                     noDataMessage.innerHTML = `
-                        <section class="flex justify-center items-center ">
-                            <div>
-                                <img src="./Icon.png" alt="" />
-                            </div>
-                            <div>
-                                <p>Oops!! Sorry, There is no content here</p>
-                            </div>
-                        </section>
+                  
+                     <section class="flex justify-center items-center w-screen">
+                     <div> 
+                         <div >
+                          <img src="./Icon.png" alt="" />
+                         </div>
+                          <div>
+                               <p>Oops!! Sorry, There is no content here</p>
+                           </div>
+                       </div>
+                      </section>
+                  
                     `;
                     cardContainer.appendChild(noDataMessage);
                 } else {
